@@ -2,7 +2,6 @@
 
 **Bem-vindo ao desafio!** Inquietos e acelerados, criativos ou cartesianos – queremos ver seu raciocínio!
 
-**Tempo estimado**: 4-6 horas.  
 **Stack esperada**: Next.js (React + shadcn/ui) + NestJS + PostgreSQL/SQLite (via Prisma).  
 
 ---
