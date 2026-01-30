@@ -11,5 +11,39 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+enum PedidoStatus {
+  aberto
+  em_andamento
+  concluido
+}
+
+enum PedidoPrioridade {
+  baixa
+  media
+  alta
+}
+
+model Pedido {
+  id        String           @id @default(cuid())
+  titulo    String
+  descricao String
+  status    PedidoStatus     @default(aberto)
+  prioridade PedidoPrioridade 
+  data_criacao DateTime         @default(now())
+
+  comentarios Comentario[]
+}
+
+model Comentario{
+  id        String           @id @default(cuid())
+  pedidoId  String
+  autor     String
+  mensagem  String
+  data DateTime         @default(now())
+
+  pedido    Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@index([pedidoId])
 }
