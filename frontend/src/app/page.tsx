@@ -27,7 +27,7 @@ export default async function HomePage({ searchParams }: PageProps) {
         </div>
 
         <Button asChild>
-          <Link href="/pedidos/new">Novo pedido</Link>
+          <Link href="/pedido/new">Novo pedido</Link>
         </Button>
       </div>
 

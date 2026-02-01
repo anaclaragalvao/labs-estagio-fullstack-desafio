@@ -24,3 +24,23 @@ export async function listPedidos(
 
   return res.json();
 }
+
+export async function createPedido(data: {
+  titulo: string;
+  descricao: string;
+  status: pedidoStatus;
+  prioridade: pedidoPrioridade;
+}): Promise<Pedido> {
+  const res = await fetch(`${API_URL}/pedidos`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Falha ao criar pedido (${res.status}). ${text}`);
+  }
+
+  return res.json();
+} 
