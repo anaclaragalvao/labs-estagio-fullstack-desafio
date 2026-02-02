@@ -9,3 +9,11 @@ export type Pedido = {
     prioridade: pedidoPrioridade;
     data_criacao: Date;
 }
+
+export type Comentario = {
+    id: string;
+    pedido_id: string;
+    autor: string;
+    mensagem: string;
+    data: Date;
+}

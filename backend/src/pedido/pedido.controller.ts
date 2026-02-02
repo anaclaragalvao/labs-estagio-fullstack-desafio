@@ -20,6 +20,11 @@ export class PedidosController {
     return this.pedidosService.list(query);
   }
 
+  @Get(':id')
+  getById(@Param('id') id: string) {
+    return this.pedidosService.getById(id);
+  }
+
   // PATCH /pedidos/:id/status
   @Patch(':id/status')
   updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto) {

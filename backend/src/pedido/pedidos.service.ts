@@ -65,4 +65,10 @@ export class PedidosService {
       data: { status: dto.status },
     });
   }
+  async getById(id: string) {
+    const pedido = await this.prisma.pedido.findUnique({ where: { id } });
+    if (!pedido) throw new NotFoundException('Pedido não encontrado');
+    return pedido;
+  }
+
 }
