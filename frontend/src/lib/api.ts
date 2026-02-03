@@ -1,6 +1,6 @@
 import { Comentario, Pedido, pedidoPrioridade, pedidoStatus } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 function toQuery(params: Record<string, string | undefined>) {
   const usp = new URLSearchParams();
