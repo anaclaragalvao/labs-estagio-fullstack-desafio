@@ -13,8 +13,16 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enableCors({ origin: 'http://localhost:3001' });
+  app.enableCors({
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://labs-estagio-fullstack-desafio.vercel.app",
+  ],
+});
+  const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+  await app.listen(port, '0.0.0.0');
 
-  await app.listen(process.env.PORT ?? 3000);
+
 }
 bootstrap();
