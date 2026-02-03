@@ -2,6 +2,10 @@
 
 Mini-sistema para registro de pedidos internos com comentários, filtros e atualização de status.
 
+## Links relacionados
+Docs: https://docs.google.com/document/d/1uOCU5Scu_6z-1yDwOfYPJtunBSFU_EdoWlDua08SK-A/edit?usp=sharing
+Notion: https://www.notion.so/2f8480dc2437808fa1f0c21435a054d3?v=2f8480dc2437809c9e44000c7cc47ea2&source=copy_link
+
 ## Stack
 
 - **Frontend:** Next.js (React) + shadcn/ui
