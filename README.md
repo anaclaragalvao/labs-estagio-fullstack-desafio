@@ -1,117 +1,109 @@
-# 🛠️ Desafio Final: Estágio Fullstack - Labs (AZZAS 2154 / Grupo Soma)
+# Desafio Final — Estágio Fullstack (Labs)
 
-**Bem-vindo ao desafio!** Inquietos e acelerados, criativos ou cartesianos – queremos ver seu raciocínio!
+Mini-sistema para registro de pedidos internos com comentários, filtros e atualização de status.
 
-**Stack esperada**: Next.js (React + shadcn/ui) + NestJS + PostgreSQL/SQLite (via Prisma).  
+## Stack
 
----
+- **Frontend:** Next.js (React) + shadcn/ui
+- **Backend:** NestJS (Node/TS)
+- **Banco:** PostgreSQL
+- **ORM/Migrations:** Prisma
+- **Deploy:** Front na Vercel e Back no Cloud Run (com Cloud SQL)
+## Como rodar o projeto
 
-## Contexto
+### Requisitos
 
-Você fará um mini-sistema interno para o time do Labs registrar pedidos de produtos que outras áreas pedem (ex.: "landing page para campanha X", "ferramenta interna Y").
+- Node.js 20+
+- npm 10+
+- Docker e Docker Compose
 
-O objetivo não é ter uma UI perfeita, e sim ver como você estrutura o raciocínio, a lógica e o código.
+### Link em produção
+https://labs-estagio-fullstack-desafio.vercel.app/
 
----
+### Backend (NestJS + Prisma)
 
-## Requisitos
+1) Suba o banco local:
 
-### Entidades
-
-**Pedido:**
-- id
-- título
-- descrição
-- status (ex.: "aberto", "em_andamento", "concluido")
-- prioridade ("baixa", "media", "alta")
-- data de criação
-
-**Comentário:**
-- id
-- pedidoId
-- autor (string simples)
-- mensagem
-- data
-
-### Backend (NestJS)
-
-Endpoints REST:
 ```
-POST   /pedidos                    - cria pedido
-GET    /pedidos?status=X&prioridade=Y - lista com filtros opcionais
-PATCH  /pedidos/:id/status         - atualiza status
-POST   /pedidos/:id/comentarios    - adiciona comentário
-GET    /pedidos/:id/comentarios    - lista comentários
+cd backend
+docker compose up -d
 ```
 
-**Regras de negócio:**
-- Não permitir criar pedido sem título
-- Não permitir comentário vazio
-- **Regra importante:** Pedidos de prioridade "alta" não podem ser criados ou alterados para status "concluido" diretamente
+2) Configure o banco (já existe .env com DATABASE_URL):
 
-**Persistência:**
-- Pode ser em memória (array), SQLite ou PostgreSQL
-- Diferencial: usar Prisma + PostgreSQL com Docker
-
-### Frontend (Next.js + React)
-
-**Página de listagem:**
-- Exibe todos os pedidos
-- Filtros por status e prioridade
-- Indicação visual de prioridade
-
-**Formulário de criação:**
-- Criar novo pedido
-
-**Página de detalhes:**
-- Exibe dados do pedido
-- Lista comentários
-- Permite adicionar novo comentário
-- Botões para mudar status
-
-**Diferencial:** usar shadcn/ui para componentes
-
-### Lógica Extra (Teste de Raciocínio)
-
-Implemente uma função:
-```typescript
-calcularAtrasados(pedidos: Pedido[]): number
+```
+npm install
+npx prisma generate
+npx prisma migrate dev
 ```
 
-Que retorna a **quantidade** de pedidos "atrasados" considerando:
-- Prioridade **alta**: mais de 2 dias em status "aberto"
-- Prioridade **média**: mais de 5 dias em status "aberto"
-- Prioridade **baixa**: mais de 10 dias em status "aberto"
+3) Rode o servidor:
 
-**Escreva 2 testes unitários** para essa função.
+```
+npm run start:dev
+```
 
----
+O backend sobe em http://localhost:3000.
 
-## Como entregar
+### Frontend (Next.js)
 
-1. **Fork este repositório**
-2. **Implemente a solução** na estrutura que preferir (monorepo, pastas separadas, etc.)
-3. **Crie um README.md** no seu fork explicando:
-   - Como rodar o projeto (comandos, requisitos)
-   - Decisões técnicas que você tomou
-   - O que você melhoraria se tivesse mais tempo
-4. **Abra um Pull Request** para este repositório
-5. **Compartilhe o link do PR** no formulário de candidatura
+1) Ajuste a URL da API em frontend/.env.local:
 
----
+```
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
-## Critérios de avaliação
+2) Rode o app:
 
-- ✅ Lógica correta e regras de negócio implementadas
-- ✅ Código organizado e legível
-- ✅ Capacidade de explicar decisões (no PR e README)
-- ✅ Tratamento de erros
-- 🌟 **Diferenciais:** testes, Docker, deploy (Vercel/Cloud Run), uso de shadcn/ui
+```
+cd frontend
+npm install
+npm run dev -- -p 3001
+```
 
----
+Abra http://localhost:3001.
 
-## Dúvidas?
+### Testes
 
-Comente no seu PR ou pergunte durante o processo seletivo.
+Frontend:
 
-**GENTE É O QUE SOMA!** 🚀
+```
+cd frontend
+npm run test
+```
+
+Backend:
+
+```
+cd backend
+npm run test
+```
+
+## Decisões técnicas
+
+- Repositório com pastas separadas, backend e frontend.
+- Prisma + PostgreSQL com Docker para persistência e migrações. Em produção, usei CloudSQL (Postgres gerenciado) para evitar persistência frágil dentro de containers.
+- Regras de negócio concentradas nos serviços (NestJS), como não criar pedido com título vazio, não pode ter prioridade alta sem passar por em andamento.
+- Não estava nos requisitos, mas deixei tanto o comentário quanto o autor não poder ser vazio para que caso o comentário seja confuso, seja mais fácil de discutir.
+- shadcn/ui para UI consistente e acessível.
+- Testes unitários no frontend (Vitest).
+- Testes de regras no backend com Jest (mocks do Prisma).
+
+## O que eu melhoraria com mais tempo
+
+- Implementar a visualização de número de pedidos atrasados.
+- Melhor padronização de variáveis.
+- Deixar a migração no mesmo timezone.
+- Colocar DATABASE_URL em Secret Manager (em vez de env plain)
+- Autenticação e controle de acesso.
+- Paginação e ordenação no endpoint de listagem.
+- Melhorar estados de loading/skeleton e feedback de erro.
+- Cobertura de testes (e2e para endpoints e integração no frontend).
+- CI/CD (lint, testes e deploy automatizado).
+
+
+## Observações
+
+- Essas instruções para rodar pode fazer, mas já está em produção: https://labs-estagio-fullstack-desafio.vercel.app/
+- Há um .env local no frontend com a URL de produção; para rodar localmente, ajuste para http://localhost:3000.
+- A regra de negócio de prioridade alta para concluir foi implementada no backend.
